@@ -29,7 +29,7 @@ export const BRAND_STORY = {
 export const OWNER_PROFILE = {
   name: "RISA FIRNANDI",
   role: "Founding Principal & Creative Director",
-  portrait: "/src/assets/images/risa_firnandi_1782609009792.jpg",
+  portrait: "/public/images/risa_firnandi_1782609009792.jpg",
   quote: "Design is not a decorative skin applied after the fact. It is a profound search for order, atmosphere, and human harmony. When we build, we build for generations.",
   bio: "With over two decades of international architectural and design practice, Risa Firnandi has defined a design language characterized by quiet elegance, rigorous geometric discipline, and sensory warmth. He established Kàmer, House of Design to bring architecture, interior design, and master-level construction under one roof. His projects have been featured in leading global design publications and have received prestigious accolades worldwide."
 };
@@ -40,7 +40,7 @@ export const SERVICES_DATA: Service[] = [
     name: "Architectural & Interior Design",
     tagline: "The Poetry of Proportion and Light",
     description: "We orchestrate complete design schemes from spatial master planning to microscopic material pairings, ensuring cohesive narrative flow across every square millimeter.",
-    image: "/src/assets/images/hero_luxury_lounge_1782603846816.jpg",
+    image: "/public/images/hero_luxury_lounge_1782603846816.jpg",
     subServices: [
       {
         name: "Concept Design & Master Planning",
@@ -99,7 +99,7 @@ export const SERVICES_DATA: Service[] = [
     name: "General Construction & Engineering",
     tagline: "Rigorous Precision, Flawless Execution",
     description: "We act as master builders, bridging the gap between digital vision and heavy raw materials. Our dedicated builders and structural engineers execute projects to sub-millimeter tolerances.",
-    image: "/src/assets/images/minimalist_villa_1782603863668.jpg",
+    image: "/public/images/minimalist_villa_1782603863668.jpg",
     subServices: [
       {
         name: "Architectural Construction",
@@ -138,7 +138,7 @@ export const SERVICES_DATA: Service[] = [
     name: "Bespoke Custom Furniture",
     tagline: "Artisanal Joinery for Enduring Character",
     description: "In our private wood and metallurgy atelier, we craft custom, high-end furniture designed specifically for each architectural context, matching timber grain and brass luster perfectly.",
-    image: "/src/assets/images/bespoke_credenza_1782603874686.jpg",
+    image: "/public/images/bespoke_credenza_1782603874686.jpg",
     subServices: [
       {
         name: "Custom Residential Furniture",
@@ -183,9 +183,9 @@ export const PROJECTS_DATA: Project[] = [
     year: "2025",
     services: ["Architectural Design", "General Construction", "Bespoke Joinery"],
     description: "A striking, low-slung residence that merges the quiet elegance of Japanese traditional timber frame engineering with modern, board-formed concrete and expansive structural glass sheets. Designed to frame the changing seasonal colors of the Kyoto mountainside, the pavilion features custom dark-stained cedar panels and custom floating ceiling profiles.",
-    thumbnail: "/src/assets/images/minimalist_villa_1782603863668.jpg",
+    thumbnail: "/public/images/minimalist_villa_1782603863668.jpg",
     gallery: [
-      "/src/assets/images/minimalist_villa_1782603863668.jpg",
+      "/public/images/minimalist_villa_1782603863668.jpg",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
     ],
@@ -206,9 +206,9 @@ export const PROJECTS_DATA: Project[] = [
     year: "2024",
     services: ["Bespoke Joinery", "Furniture Design", "Metal Crafting"],
     description: "A signature statement of artisanal furniture craft. This bespoke credenza features selected figured walnut boards with grain matched horizontally across all five sliding drawers. Supported by a custom cast-bronze pedestal frame, it incorporates hand-finished organic brass handles and integrated soft-close structural runner engineering.",
-    thumbnail: "/src/assets/images/bespoke_credenza_1782603874686.jpg",
+    thumbnail: "/public/images/bespoke_credenza_1782603874686.jpg",
     gallery: [
-      "/src/assets/images/bespoke_credenza_1782603874686.jpg",
+      "/public/images/bespoke_credenza_1782603874686.jpg",
       "https://images.unsplash.com/photo-1617806118233-18e1db207f62?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
     ],
@@ -229,9 +229,9 @@ export const PROJECTS_DATA: Project[] = [
     year: "2025",
     services: ["Interior Design", "General Construction", "Acoustic Engineering"],
     description: "A sprawling duplex penthouse floating high above the Manhattan skyline. Designed with massive monolithic blocks of Nero Marquina marble, wire-brushed cedar ceilings, and dynamic indirect warm LED arrays. Acoustic glass isolates urban hum, transforming this high-rise space into a deeply quiet, contemplative cloud-level retreat.",
-    thumbnail: "/src/assets/images/hero_luxury_lounge_1782603846816.jpg",
+    thumbnail: "/public/images/hero_luxury_lounge_1782603846816.jpg",
     gallery: [
-      "/src/assets/images/hero_luxury_lounge_1782603846816.jpg",
+      "/public/images/hero_luxury_lounge_1782603846816.jpg",
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
     ],
@@ -255,7 +255,7 @@ export const PROJECTS_DATA: Project[] = [
     thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-      "/src/assets/images/minimalist_villa_1782603863668.jpg",
+      "/public/images/minimalist_villa_1782603863668.jpg",
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
     ],
     clientQuote: {
@@ -278,7 +278,7 @@ export const PROJECTS_DATA: Project[] = [
     thumbnail: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
-      "/src/assets/images/boutique_hotel_lounge_1782603900111.jpg",
+      "/public/images/boutique_hotel_lounge_1782603900111.jpg",
       "https://images.unsplash.com/photo-1617806118233-18e1db207f62?auto=format&fit=crop&w=1200&q=80"
     ],
     clientQuote: {
@@ -301,7 +301,7 @@ export const PROJECTS_DATA: Project[] = [
     thumbnail: "https://images.unsplash.com/photo-1617806118233-18e1db207f62?auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1617806118233-18e1db207f62?auto=format&fit=crop&w=1200&q=80",
-      "/src/assets/images/bespoke_credenza_1782603874686.jpg",
+      "/public/images/bespoke_credenza_1782603874686.jpg",
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
     ],
     clientQuote: {

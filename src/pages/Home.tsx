@@ -40,7 +40,7 @@ export default function Home({ onSelectProject, setActiveTab }: HomeProps) {
             initial={{ scale: 1.15, opacity: 0 }}
             animate={{ scale: 1, opacity: 0.75 }}
             transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
-            src="/src/assets/images/hero_luxury_lounge_1782603846816.jpg"
+            src="/public/images/hero_luxury_lounge_1782603846816.jpg"
             alt="Atmospheric Luxury Lounge"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
@@ -225,7 +225,7 @@ export default function Home({ onSelectProject, setActiveTab }: HomeProps) {
           {/* Left Column: Full-Height Photography Dominance */}
           <div className="md:col-span-6 relative min-h-[350px] md:min-h-full overflow-hidden border-r border-gold-500/10">
             <img
-              src="/src/assets/images/bespoke_credenza_1782603874686.jpg"
+              src="/public/images/bespoke_credenza_1782603874686.jpg"
               alt="Artisanal Architectural Joinery Detail"
               referrerPolicy="no-referrer"
               className="absolute inset-0 w-full h-full object-cover"
