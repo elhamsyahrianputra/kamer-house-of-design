@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Kàmer, House of Design",
+  "description": "A luxury company profile website for a premium Construction, Interior Design, and Custom Furniture studio inspired by AB Concept.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
