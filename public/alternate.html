@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kàmer, House of Design — Beyond Design</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cream: #fbfaf7;
+            --ink: #1a1a1a;
+            --muted: #a3a3a3;
+            --border: #e5e0d8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        .font-serif { font-family: 'Cormorant Garamond', serif; }
+
+        /* ── HEADER ── */
+        .hamburger-line {
+            display: block;
+            transition: transform 0.35s cubic-bezier(0.77,0,0.175,1), background-color 0.3s ease, width 0.3s ease;
+        }
+        .menu-open .line-1 { transform: translateY(4px) rotate(45deg); }
+        .menu-open .line-2 { transform: translateY(-4px) rotate(-45deg); }
+
+        /* ── HERO SLIDER ── */
+        .slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1);
+            transform: scale(1.04);
+            animation: slow-zoom 8s ease-out infinite alternate;
+        }
+        .slide.active { opacity: 1; }
+        @keyframes slow-zoom {
+            from { transform: scale(1.04); }
+            to   { transform: scale(1.0); }
+        }
+
+        /* ── HOME FILTER BAR ── */
+        .filter-btn {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            color: var(--ink);
+            border-color: var(--ink);
+        }
+
+        /* ── PROJECT CARDS ── */
+        .project-card { cursor: pointer; overflow: hidden; }
+        .project-card img {
+            transition: transform 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
+            display: block; width: 100%; height: 100%; object-fit: cover;
+        }
+        .project-card:hover img { transform: scale(1.06); }
+        .project-card .overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+            opacity: 0; transition: opacity 0.5s ease;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 28px; color: #fff;
+        }
+        .project-card:hover .overlay { opacity: 1; }
+
+        /* ── PROJECT DETAIL ── */
+        #page-project-detail { display: none; }
+        #page-project-detail.active { display: block; }
+
+        /* ── FEATURED TAG ── */
+        .featured-tag {
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .overlay .featured-tag { color: rgba(255,255,255,0.6); }
+
+        /* ── SERVICES FADE ── */
+        .svc-fade { transition: opacity 0.35s ease; }
+
+        /* ── FULLSCREEN MENU ── */
+        #fullscreen-menu { display: none; }
+        #fullscreen-menu.is-visible { display: flex; }
+
+        /* ── FOOTER ── */
+        .site-footer { background: var(--ink); color: var(--muted); }
+
+        /* ── PAGE SECTIONS ── */
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        /* ── ABOUT SECTIONS ── */
+        .about-divider { border-top: 1px solid var(--border); }
+
+        /* ── SERVICES LIST ── */
+        .service-category { border-top: 1px solid var(--border); }
+        .service-sub { font-size: 12px; letter-spacing: 0.12em; color: var(--muted); }
+
+        /* ── CONTACT FORM ── */
+        .form-field {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-field:focus { border-color: var(--ink); }
+        .form-field::placeholder { color: var(--muted); letter-spacing: 0.08em; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ─── HEADER ──────────────────────────────────────────── -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 px-8 py-7 flex justify-between items-center transition-all duration-500 mix-blend-difference">
+        <a href="#" onclick="showPage('home');return false;" id="logo" class="font-serif text-xl tracking-[0.22em] text-white uppercase select-none">Kàmer</a>
+        <button id="menu-btn" onclick="toggleMenu()" aria-label="Menu" class="group flex flex-col gap-[6px] justify-center items-end w-8 h-8 focus:outline-none cursor-pointer z-50">
+            <span class="hamburger-line line-1 w-8 h-px bg-white"></span>
+            <span class="hamburger-line line-2 w-5 h-px bg-white group-hover:w-8"></span>
+        </button>
+    </header>
+
+    <!-- ─── FULLSCREEN MENU ──────────────────────────────────── -->
+    <div id="fullscreen-menu" class="fixed inset-0 bg-[#fbfaf7] z-40 opacity-0 flex-col justify-center items-center transition-opacity duration-500">
+        <nav class="flex flex-col gap-5 text-center">
+            <button onclick="navigatePage('home')"     class="font-serif text-5xl font-light tracking-wide text-neutral-900 hover:italic transition-all duration-300">Home</button>
+            <button onclick="navigatePage('about')"    class="font-serif text-5xl font-light tracking-wide text-neutral-900 hover:italic transition-all duration-300">About</button>
+            <button onclick="navigatePage('projects')" class="font-serif text-5xl font-light tracking-wide text-neutral-900 hover:italic transition-all duration-300">Projects</button>
+            <button onclick="navigatePage('services')" class="font-serif text-5xl font-light tracking-wide text-neutral-900 hover:italic transition-all duration-300">Services</button>
+            <button onclick="navigatePage('contact')"  class="font-serif text-5xl font-light tracking-wide text-neutral-900 hover:italic transition-all duration-300">Contact</button>
+        </nav>
+        <div class="absolute bottom-10 text-[9px] tracking-[0.3em] uppercase text-neutral-400">© 2026 Kàmer, House of Design. All Rights Reserved.</div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         HOME PAGE
+    ══════════════════════════════════════════════════════ -->
+    <section id="page-home" class="page-section active">
+
+        <!-- HERO SLIDER -->
+        <div class="relative h-screen w-full overflow-hidden bg-neutral-900">
+            <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=90');"></div>
+            <div class="slide"        style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2000&q=90');"></div>
+            <div class="slide"        style="background-image:url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=90');"></div>
+            <div class="absolute inset-0 bg-black/30"></div>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6 z-10">
+                <p class="text-[10px] tracking-[0.4em] uppercase mb-6 opacity-70">Beyond Design</p>
+                <h1 class="font-serif text-[clamp(3.5rem,9vw,8rem)] font-light italic leading-none mb-8">Timeless Space</h1>
+                <div class="w-px h-14 bg-white/40"></div>
+            </div>
+
+            <div class="absolute bottom-10 right-10 z-10 flex items-center gap-3">
+                <span id="slide-cur" class="font-serif text-white text-lg italic">01</span>
+                <span class="text-white/30 text-xs">/</span>
+                <span class="text-white/40 text-xs">03</span>
+            </div>
+
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                <button onclick="goSlide(0)" class="slide-dot w-6 h-px bg-white transition-all duration-300" aria-label="Slide 1"></button>
+                <button onclick="goSlide(1)" class="slide-dot w-3 h-px bg-white/40 transition-all duration-300" aria-label="Slide 2"></button>
+                <button onclick="goSlide(2)" class="slide-dot w-3 h-px bg-white/40 transition-all duration-300" aria-label="Slide 3"></button>
+            </div>
+        </div>
+
+        <!-- FILTER + PROJECT GRID -->
+        <div class="px-8 md:px-16 pt-20 pb-0 max-w-[1600px] mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 border-b border-[var(--border)] pb-6">
+                <div>
+                    <p class="featured-tag mb-2">— Selected Works</p>
+                    <h2 class="font-serif text-[clamp(2rem,4vw,3.5rem)] font-light leading-none">Our Portfolio</h2>
+                </div>
+                <div class="flex gap-8">
+                    <button class="filter-btn active" onclick="filterProjects('all', this)">All</button>
+                    <button class="filter-btn" onclick="filterProjects('interior', this)">Interior Design</button>
+                    <button class="filter-btn" onclick="filterProjects('construction', this)">Construction</button>
+                    <button class="filter-btn" onclick="filterProjects('furniture', this)">Furniture</button>
+                </div>
+            </div>
+
+            <!-- ROW 1: Full-width hero project -->
+            <div class="project-card relative overflow-hidden mb-4 w-full" data-category="interior" style="height: clamp(340px, 55vh, 700px);" onclick="openProject(0)">
+                <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=2000&q=90" alt="Serenitas Residence">
+                <div class="overlay">
+                    <p class="featured-tag mb-2">Interior Design</p>
+                    <p class="font-serif text-3xl md:text-4xl italic">Serenitas Residence</p>
+                    <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Jakarta Selatan, Indonesia</p>
+                </div>
+            </div>
+
+            <!-- ROW 2: Two-column -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="project-card relative overflow-hidden" data-category="interior" style="height: clamp(280px,40vh,520px);" onclick="openProject(1)">
+                    <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=90" alt="Cliffside Villa">
+                    <div class="overlay">
+                        <p class="featured-tag mb-2">Interior Design</p>
+                        <p class="font-serif text-2xl italic">Cliffside Private Villa</p>
+                        <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Uluwatu, Bali</p>
+                    </div>
+                </div>
+                <div class="project-card relative overflow-hidden" data-category="construction" style="height: clamp(280px,40vh,520px);" onclick="openProject(2)">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=90" alt="Skybridge HQ">
+                    <div class="overlay">
+                        <p class="featured-tag mb-2">Construction</p>
+                        <p class="font-serif text-2xl italic">Skybridge Corporate HQ</p>
+                        <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Singapore</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Three-column -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="project-card relative overflow-hidden md:col-span-1" data-category="furniture" style="height: clamp(260px,36vh,480px);" onclick="openProject(3)">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=90" alt="Arkana Collection">
+                    <div class="overlay">
+                        <p class="featured-tag mb-2">Furniture</p>
+                        <p class="font-serif text-2xl italic">Arkana Collection</p>
+                        <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Jakarta, Indonesia</p>
+                    </div>
+                </div>
+                <div class="project-card relative overflow-hidden md:col-span-2" data-category="construction" style="height: clamp(260px,36vh,480px);" onclick="openProject(4)">
+                    <img src="https://images.unsplash.com/photo-1506970845246-18f21d533b20?auto=format&fit=crop&w=1400&q=90" alt="Alila Lobby">
+                    <div class="overlay">
+                        <p class="featured-tag mb-2">Construction</p>
+                        <p class="font-serif text-2xl italic">Alila Lobby Build-Out</p>
+                        <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Seminyak, Bali</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 4: Asymmetric -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="project-card relative overflow-hidden md:col-span-5" data-category="construction" style="height: clamp(300px,45vh,600px);" onclick="openProject(5)">
+                    <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=900&q=90" alt="The Meridian Tower">
+                    <div class="overlay">
+                        <p class="featured-tag mb-2">Construction</p>
+                        <p class="font-serif text-2xl italic">The Meridian Tower</p>
+                        <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Jakarta, Indonesia</p>
+                    </div>
+                </div>
+                <div class="md:col-span-7 flex flex-col gap-4">
+                    <div class="project-card relative overflow-hidden flex-1" data-category="interior" style="height: clamp(200px,25vh,340px);" onclick="openProject(6)">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=90" alt="Serene Penthouse">
+                        <div class="overlay">
+                            <p class="featured-tag mb-2">Interior Design</p>
+                            <p class="font-serif text-2xl italic">Serene Penthouse</p>
+                            <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Sydney, Australia</p>
+                        </div>
+                    </div>
+                    <div class="project-card relative overflow-hidden flex-1" data-category="furniture" style="height: clamp(200px,25vh,340px);" onclick="openProject(7)">
+                        <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=90" alt="Forma Lounge Series">
+                        <div class="overlay">
+                            <p class="featured-tag mb-2">Furniture</p>
+                            <p class="font-serif text-2xl italic">Forma Lounge Series</p>
+                            <p class="text-xs tracking-widest uppercase opacity-60 mt-1">Bandung, Indonesia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View All CTA -->
+            <div class="mt-16 text-center">
+                <button onclick="showPage('projects')" class="inline-flex items-center gap-4 text-[11px] tracking-[0.3em] uppercase border border-neutral-300 px-10 py-4 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-all duration-300">
+                    View All Projects
+                    <span class="text-lg font-serif italic">→</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTACT CTA SECTION -->
+        <div class="px-8 md:px-16 py-28 max-w-[1600px] mx-auto mt-20 border-t border-[var(--border)]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-10">
+                <div>
+                    <p class="featured-tag mb-3">— Start a Conversation</p>
+                    <h2 class="font-serif text-[clamp(1.8rem,3.5vw,3rem)] font-light leading-tight max-w-lg">Have a project in mind? We'd love to hear from you.</h2>
+                </div>
+                <div class="shrink-0">
+                    <button onclick="showPage('contact')" class="inline-flex items-center gap-4 text-[11px] tracking-[0.3em] uppercase bg-neutral-900 text-white px-12 py-5 hover:bg-neutral-700 transition-all duration-300">
+                        Get in Touch
+                        <span class="text-lg font-serif italic">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         ABOUT PAGE
+    ══════════════════════════════════════════════════════ -->
+    <section id="page-about" class="page-section pt-40 pb-0 w-full">
+
+        <!-- SECTION 1: FOUNDER -->
+        <div class="px-8 md:px-16 max-w-7xl mx-auto pb-24">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+                <div class="md:col-span-5 order-2 md:order-1">
+                    <div class="overflow-hidden bg-neutral-100 grayscale hover:grayscale-0 transition-all duration-700 aspect-[3/4]">
+                        <img src="https://images.unsplash.com/photo-1556157382-97eda2f9e2bf?auto=format&fit=crop&w=800&q=80" alt="Risa Firnandi" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-1000">
+                    </div>
+                </div>
+                <div class="md:col-span-7 order-1 md:order-2 flex flex-col justify-end h-full pt-8 md:pt-0 md:pb-8">
+                    <span class="text-xs tracking-[0.3em] uppercase opacity-50 block mb-8">— Founder & Principal</span>
+                    <h2 class="font-serif text-[clamp(3rem,6vw,5.5rem)] font-light leading-none mb-4">Risa<br>Firnandi</h2>
+                    <p class="text-xs tracking-[0.25em] uppercase text-neutral-400 mt-4">Kàmer, House of Design &nbsp;·&nbsp; Est. 2002</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: WHO WE ARE -->
+        <div class="about-divider px-8 md:px-16 py-24 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-4">
+                    <span class="text-xs tracking-[0.3em] uppercase opacity-50 block mb-6">— Who We Are</span>
+                </div>
+                <div class="md:col-span-8 space-y-8">
+                    <p class="font-serif text-2xl md:text-3xl font-light italic text-neutral-700 leading-snug border-l border-neutral-300 pl-8">
+                        "Design is not a decorative skin applied after the fact. It is a profound search for order, atmosphere, and human harmony. When we build, we build for generations."
+                    </p>
+                    <p class="text-sm text-neutral-600 leading-relaxed font-light max-w-2xl">
+                        With over two decades of international architectural and design practice, Risa Firnandi has defined a design language characterized by quiet elegance, rigorous geometric discipline, and sensory warmth. He established Kàmer, House of Design to bring architecture, interior design, and master-level construction under one roof. His projects have been featured in leading global design publications and have received prestigious accolades worldwide.
+                    </p>
+                    <p class="text-sm text-neutral-600 leading-relaxed font-light max-w-2xl">
+                        Under Risa's direction, Kàmer, House of Design has evolved into a multi-disciplinary design and building powerhouse. Risa works directly with clients, hand-selecting premium materials, visiting construction teams at dawn, and ensuring that projects match the architectural framework down to the last millimeter.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: DESIGN STYLE -->
+        <div class="about-divider bg-neutral-900 text-white px-8 md:px-16 py-24 w-full">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-4">
+                    <span class="text-xs tracking-[0.3em] uppercase opacity-40 block mb-6">— Design Philosophy</span>
+                </div>
+                <div class="md:col-span-8 space-y-10">
+                    <h3 class="font-serif text-3xl md:text-4xl font-light leading-tight">Quiet precision.<br>Sensory warmth.<br>Enduring form.</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4 border-t border-white/10">
+                        <div>
+                            <p class="text-[10px] tracking-[0.25em] uppercase text-white/40 mb-3">Materiality</p>
+                            <p class="text-sm text-white/60 leading-relaxed font-light">Natural stone, hand-finished timber, and artisan plaster — materials chosen for texture, provenance, and longevity.</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] tracking-[0.25em] uppercase text-white/40 mb-3">Geometry</p>
+                            <p class="text-sm text-white/60 leading-relaxed font-light">Clean lines and disciplined proportion form the structural backbone of every Kàmer space.</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] tracking-[0.25em] uppercase text-white/40 mb-3">Atmosphere</p>
+                            <p class="text-sm text-white/60 leading-relaxed font-light">Light, shadow, and spatial sequence are composed with the same rigour applied to structure and finish.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         PROJECTS PAGE
+    ══════════════════════════════════════════════════════ -->
+    <section id="page-projects" class="page-section pt-40 pb-20 px-6 md:px-12 w-full max-w-7xl mx-auto">
+        <div class="mb-12 flex flex-wrap gap-6 text-xs tracking-widest uppercase border-b border-neutral-200 pb-4">
+            <button onclick="filterProjectsPage('all', this)" class="proj-filter-btn font-medium text-neutral-900 border-b border-neutral-900 pb-1">All</button>
+            <button onclick="filterProjectsPage('interior', this)" class="proj-filter-btn text-neutral-400 hover:text-neutral-900 pb-1 transition-colors">Interior Design</button>
+            <button onclick="filterProjectsPage('construction', this)" class="proj-filter-btn text-neutral-400 hover:text-neutral-900 pb-1 transition-colors">Construction</button>
+            <button onclick="filterProjectsPage('furniture', this)" class="proj-filter-btn text-neutral-400 hover:text-neutral-900 pb-1 transition-colors">Furniture</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start mb-12">
+            <div class="md:col-span-8 proj-page-card group relative overflow-hidden bg-neutral-100 aspect-[16/10] cursor-pointer" data-category="interior" onclick="openProject(0)">
+                <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                    <p class="featured-tag mb-2" style="color:rgba(255,255,255,0.6)">Interior Design</p>
+                    <p class="font-serif text-2xl italic">Serenitas Residence</p>
+                    <p class="text-xs tracking-widest uppercase opacity-70 mt-1">Jakarta Selatan, Indonesia</p>
+                </div>
+            </div>
+            <div class="md:col-span-4 proj-page-card group relative overflow-hidden bg-neutral-100 aspect-[3/4] md:mt-12 cursor-pointer" data-category="furniture" onclick="openProject(3)">
+                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                    <p class="featured-tag mb-2" style="color:rgba(255,255,255,0.6)">Furniture</p>
+                    <p class="font-serif text-2xl italic">Arkana Collection</p>
+                    <p class="text-xs tracking-widest uppercase opacity-70 mt-1">Jakarta, Indonesia</p>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="proj-page-card group relative overflow-hidden bg-neutral-100 aspect-[4/3] cursor-pointer" data-category="construction" onclick="openProject(2)">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 text-white">
+                    <p class="featured-tag mb-1" style="color:rgba(255,255,255,0.6)">Construction</p>
+                    <p class="font-serif text-xl italic">Skybridge HQ</p>
+                </div>
+            </div>
+            <div class="proj-page-card group relative overflow-hidden bg-neutral-100 aspect-[4/3] cursor-pointer" data-category="interior" onclick="openProject(1)">
+                <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 text-white">
+                    <p class="featured-tag mb-1" style="color:rgba(255,255,255,0.6)">Interior Design</p>
+                    <p class="font-serif text-xl italic">Cliffside Villa</p>
+                </div>
+            </div>
+            <div class="proj-page-card group relative overflow-hidden bg-neutral-100 aspect-[4/3] cursor-pointer" data-category="furniture" onclick="openProject(7)">
+                <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 text-white">
+                    <p class="featured-tag mb-1" style="color:rgba(255,255,255,0.6)">Furniture</p>
+                    <p class="font-serif text-xl italic">Forma Lounge Series</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         PROJECT DETAIL PAGE
+    ══════════════════════════════════════════════════════ -->
+    <section id="page-project-detail" class="page-section pt-40 pb-20 w-full">
+
+        <!-- Back button -->
+        <div class="px-8 md:px-16 mb-10 max-w-7xl mx-auto">
+            <button onclick="showPage('projects')" class="text-[10px] tracking-[0.25em] uppercase text-neutral-400 hover:text-neutral-900 transition-colors flex items-center gap-2">
+                <span>←</span> Back to Projects
+            </button>
+        </div>
+
+        <!-- Hero image -->
+        <div class="w-full overflow-hidden mb-16" style="height: clamp(400px, 65vh, 800px);">
+            <img id="detail-hero" src="" alt="" class="w-full h-full object-cover">
+        </div>
+
+        <div class="px-8 md:px-16 max-w-7xl mx-auto">
+            <!-- Title + meta -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 pb-16 border-b border-[var(--border)]">
+                <div class="md:col-span-7">
+                    <p id="detail-category" class="featured-tag mb-4"></p>
+                    <h2 id="detail-title" class="font-serif text-[clamp(2.5rem,5vw,4.5rem)] font-light leading-none mb-6"></h2>
+                    <p id="detail-desc" class="text-sm text-neutral-600 leading-relaxed font-light max-w-xl"></p>
+                </div>
+                <div class="md:col-span-5 flex flex-col justify-end gap-6">
+                    <div class="border-t border-[var(--border)] pt-6">
+                        <p class="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-1">Year</p>
+                        <p id="detail-year" class="text-sm font-light"></p>
+                    </div>
+                    <div class="border-t border-[var(--border)] pt-6">
+                        <p class="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-1">Location</p>
+                        <p id="detail-location" class="text-sm font-light"></p>
+                    </div>
+                    <div class="border-t border-[var(--border)] pt-6">
+                        <p class="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-1">Services</p>
+                        <p id="detail-services" class="text-sm font-light"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div id="detail-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20"></div>
+
+            <!-- Other Projects -->
+            <div class="border-t border-[var(--border)] pt-16">
+                <p class="featured-tag mb-8">— Other Projects</p>
+                <div id="detail-related" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SERVICES PAGE
+    ══════════════════════════════════════════════════════ -->
+    <section id="page-services" class="page-section pt-40 pb-20 px-6 md:px-16 max-w-7xl mx-auto w-full">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
+
+            <!-- LEFT: service list -->
+            <div class="md:col-span-6 space-y-12 py-6">
+                <div>
+                    <span class="text-xs tracking-[0.3em] uppercase opacity-50 block mb-6">— Capabilities</span>
+                    <h2 class="font-serif text-3xl md:text-4xl font-light mb-8">What We Do</h2>
+                </div>
+
+                <!-- 01 DESIGN -->
+                <div class="group border-b border-[var(--border)] pb-8 cursor-pointer" onmouseenter="updateService(0)">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mt-1">01</span>
+                        <h3 class="font-serif text-2xl md:text-3xl font-light transition-all duration-300 group-hover:pl-2 group-hover:italic flex-1 ml-6">Design</h3>
+                    </div>
+                    <div class="ml-10 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-xs text-neutral-400 tracking-wide">Concept Design &nbsp;·&nbsp; Schematic Design &nbsp;·&nbsp; Design Development</p>
+                        <p class="text-xs text-neutral-400 tracking-wide">Structural Design &nbsp;·&nbsp; Mechanical & Electrical Design</p>
+                    </div>
+                </div>
+
+                <!-- 02 CONSTRUCTION -->
+                <div class="group border-b border-[var(--border)] pb-8 cursor-pointer" onmouseenter="updateService(1)">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mt-1">02</span>
+                        <h3 class="font-serif text-2xl md:text-3xl font-light transition-all duration-300 group-hover:pl-2 group-hover:italic flex-1 ml-6">Construction</h3>
+                    </div>
+                    <div class="ml-10 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-xs text-neutral-400 tracking-wide">Architectural Construction &nbsp;·&nbsp; Interior Construction</p>
+                        <p class="text-xs text-neutral-400 tracking-wide">Mechanical & Electrical Construction</p>
+                    </div>
+                </div>
+
+                <!-- 03 CUSTOM FURNITURE -->
+                <div class="group border-b border-[var(--border)] pb-8 cursor-pointer" onmouseenter="updateService(2)">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mt-1">03</span>
+                        <h3 class="font-serif text-2xl md:text-3xl font-light transition-all duration-300 group-hover:pl-2 group-hover:italic flex-1 ml-6">Custom Furniture</h3>
+                    </div>
+                    <div class="ml-10 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-xs text-neutral-400 tracking-wide">Bespoke design & in-house fabrication</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: dynamic image + desc -->
+            <div class="md:col-span-6 flex flex-col justify-center bg-neutral-50 p-8 md:p-12 border border-[var(--border)] min-h-[480px]">
+                <div class="w-full aspect-video overflow-hidden mb-6 bg-neutral-200">
+                    <img id="service-img" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover svc-fade">
+                </div>
+                <p id="service-label" class="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mb-3 svc-fade">Design</p>
+                <p id="service-desc" class="text-sm text-neutral-600 leading-relaxed font-light svc-fade">From first sketch to final construction document — our design process is exhaustive, iterative, and precision-led. Every decision serves the architecture.</p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         CONTACT PAGE
+    ══════════════════════════════════════════════════════ -->
+    <section id="page-contact" class="page-section w-full">
+
+        <!-- HERO BAND: full-width dark statement -->
+        <div class="bg-neutral-900 text-white pt-40 pb-20 px-8 md:px-16 w-full">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+                <div class="md:col-span-8">
+                    <span class="text-[10px] tracking-[0.35em] uppercase text-white/30 block mb-6">— Inquiries</span>
+                    <h2 class="font-serif text-[clamp(2.8rem,6vw,5.5rem)] font-light leading-[1.05]">
+                        Every great space<br>begins with<br><em>a conversation.</em>
+                    </h2>
+                </div>
+                <div class="md:col-span-4 md:pb-2">
+                    <p class="text-sm text-white/50 leading-relaxed font-light">
+                        Great spaces are born from genuine passion and realized through uncompromising craftsmanship. Tell us about your project — we'll take it from there.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM + INFO BLOCK -->
+        <div class="px-8 md:px-16 py-24 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24">
+
+                <!-- LEFT: Form -->
+                <div class="md:col-span-7 order-2 md:order-1">
+                    <p class="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mb-10">— Start a Project</p>
+                    <div class="space-y-10">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 block mb-2">Name</label>
+                                <input type="text" placeholder="Your full name" class="form-field">
+                            </div>
+                            <div>
+                                <label class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 block mb-2">Email</label>
+                                <input type="email" placeholder="your@email.com" class="form-field">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 block mb-2">Phone</label>
+                            <input type="tel" placeholder="+62 ···" class="form-field">
+                        </div>
+                        <div>
+                            <label class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 block mb-2">Service</label>
+                            <select class="form-field" style="appearance:none; cursor:pointer;">
+                                <option value="" disabled selected>Select a service</option>
+                                <option>Design</option>
+                                <option>Construction</option>
+                                <option>Custom Furniture</option>
+                                <option>Design + Construction</option>
+                                <option>Not sure yet</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 block mb-2">Your Project</label>
+                            <textarea placeholder="Tell us about your vision, location, and timeline…" rows="5" class="form-field resize-none"></textarea>
+                        </div>
+                        <div class="pt-2">
+                            <button type="button" class="inline-flex items-center gap-5 text-[11px] tracking-[0.3em] uppercase bg-neutral-900 text-white px-12 py-5 hover:bg-neutral-700 transition-all duration-300">
+                                Send Inquiry
+                                <span class="font-serif text-lg italic">→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Info -->
+                <div class="md:col-span-5 order-1 md:order-2">
+                    <p class="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mb-10">— Studio</p>
+                    <div class="space-y-0">
+                        <div class="border-t border-[var(--border)] py-7">
+                            <p class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 mb-3">Company</p>
+                            <p class="font-serif text-xl font-light">Kàmer, House of Design</p>
+                            <p class="text-xs text-neutral-400 mt-1 tracking-wide">Est. 2002</p>
+                        </div>
+                        <div class="border-t border-[var(--border)] py-7">
+                            <p class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 mb-3">Address</p>
+                            <p class="text-sm text-neutral-600 font-light leading-relaxed">
+                                Jl. Saraswati No 9s<br>
+                                Cipete Utara, Kebayoran Baru<br>
+                                Jakarta Selatan 12150
+                            </p>
+                        </div>
+                        <div class="border-t border-[var(--border)] py-7">
+                            <p class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 mb-3">Phone</p>
+                            <a href="tel:+6281808695100" class="text-sm font-light hover:text-neutral-500 transition-colors tracking-wide">+62 818 0869 5100</a>
+                        </div>
+                        <div class="border-t border-b border-[var(--border)] py-7">
+                            <p class="text-[9px] tracking-[0.25em] uppercase text-neutral-400 mb-3">Email</p>
+                            <a href="mailto:hello@kamer.id" class="font-serif text-lg italic hover:underline">hello@kamer.id</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         FOOTER — Global
+    ══════════════════════════════════════════════════════ -->
+    <footer class="site-footer py-16 px-8 mt-auto w-full">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
+                <div>
+                    <p class="font-serif text-white text-lg mb-1">Kàmer, House of Design</p>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-white/30">Since 2002</p>
+                </div>
+                <div>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-3">Address</p>
+                    <p class="text-xs leading-relaxed">Jl. Saraswati No 9s<br>Cipete Utara, Kebayoran Baru<br>Jakarta Selatan 12150</p>
+                </div>
+                <div>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-white/40 mb-3">Contact</p>
+                    <p class="text-xs">+62 818 0869 5100</p>
+                </div>
+            </div>
+            <div class="pt-8 flex justify-between items-center text-[10px] tracking-widest uppercase text-white/20">
+                <span>© 2026 Kàmer, House of Design</span>
+                <span>Beyond Design</span>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ─── JAVASCRIPT ───────────────────────────────────────── -->
+    <script>
+        /* ══ STATE ══ */
+        let isMenuOpen = false;
+        let currentPageId = 'home';
+
+        /* ══ PROJECT DATA ══ */
+        const projectsData = [
+            {
+                title: "Serenitas Residence",
+                category: "Interior Design",
+                desc: "A full interior transformation of a South Jakarta family home — balancing warmth with restraint. Every surface, fixture, and furnishing was curated to create a retreat of quiet sophistication.",
+                year: "2024",
+                location: "Jakarta Selatan, Indonesia",
+                services: "Interior Design, Custom Furniture",
+                hero: "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1556020685-ae41abfc9365?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "Cliffside Private Villa",
+                category: "Interior Design",
+                desc: "Perched above the Indian Ocean, this private villa demanded spaces as dramatic as its setting. Raw limestone, bleached teak, and linen sofas make a backdrop for uninterrupted horizon views.",
+                year: "2023",
+                location: "Uluwatu, Bali",
+                services: "Interior Design",
+                hero: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "Skybridge Corporate HQ",
+                category: "Construction",
+                desc: "A 14-floor commercial build-out for a regional technology group. Kàmer oversaw the complete structural and interior construction from ground-up to handover.",
+                year: "2022",
+                location: "Singapore",
+                services: "Architectural Construction, Interior Construction, M&E Construction",
+                hero: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "Arkana Collection",
+                category: "Furniture",
+                desc: "A twelve-piece furniture series inspired by the interplay of arch and void. Handcrafted in solid walnut with hand-rubbed oil finish — available exclusively through Kàmer.",
+                year: "2024",
+                location: "Jakarta, Indonesia",
+                services: "Custom Furniture Design & Fabrication",
+                hero: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "Alila Lobby Build-Out",
+                category: "Construction",
+                desc: "A complete lobby and public-space construction for the Alila Seminyak expansion. Delivered on schedule with premium Balinese stone and hand-finished concrete throughout.",
+                year: "2021",
+                location: "Seminyak, Bali",
+                services: "Interior Construction, Architectural Construction",
+                hero: "https://images.unsplash.com/photo-1506970845246-18f21d533b20?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "The Meridian Tower",
+                category: "Construction",
+                desc: "Kàmer led the interior construction of three floors of mixed-use hospitality and retail space within this landmark Jakarta tower, managing 24 specialist subcontractors.",
+                year: "2023",
+                location: "Jakarta Pusat, Indonesia",
+                services: "Interior Construction, M&E Construction",
+                hero: "https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "Serene Penthouse",
+                category: "Interior Design",
+                desc: "A harbour-facing penthouse where natural light dictates every spatial decision. Pale stone, aged brass, and custom cabinetry create an environment of restrained luxury.",
+                year: "2023",
+                location: "Sydney, Australia",
+                services: "Interior Design, Custom Furniture",
+                hero: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1556020685-ae41abfc9365?auto=format&fit=crop&w=1200&q=80"
+                ]
+            },
+            {
+                title: "Forma Lounge Series",
+                category: "Furniture",
+                desc: "A refined lounge series developed for hospitality environments — low-slung, architecturally proportioned, upholstered in hand-stitched Italian leather.",
+                year: "2024",
+                location: "Bandung, Indonesia",
+                services: "Custom Furniture Design & Fabrication",
+                hero: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=2000&q=90",
+                gallery: [
+                    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80"
+                ]
+            }
+        ];
+
+        /* ══ MENU ══ */
+        function toggleMenu() {
+            const menu = document.getElementById('fullscreen-menu');
+            const btn  = document.getElementById('menu-btn');
+            const header = document.getElementById('main-header');
+            isMenuOpen = !isMenuOpen;
+
+            if (isMenuOpen) {
+                menu.classList.add('is-visible');
+                requestAnimationFrame(() => menu.classList.add('opacity-100'));
+                btn.classList.add('menu-open');
+                header.classList.remove('mix-blend-difference');
+                document.querySelectorAll('.hamburger-line').forEach(el => {
+                    el.classList.remove('bg-white');
+                    el.classList.add('bg-neutral-900');
+                });
+                document.getElementById('logo').classList.remove('text-white');
+                document.getElementById('logo').classList.add('text-neutral-900');
+            } else {
+                menu.classList.remove('opacity-100');
+                setTimeout(() => menu.classList.remove('is-visible'), 500);
+                btn.classList.remove('menu-open');
+                resetHeaderStyling(currentPageId);
+            }
+        }
+
+        function navigatePage(id) {
+            toggleMenu();
+            setTimeout(() => showPage(id), 300);
+        }
+
+        /* ══ PAGE SWITCH ══ */
+        function showPage(pageId) {
+            currentPageId = pageId;
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            document.getElementById('page-' + pageId).classList.add('active');
+            resetHeaderStyling(pageId);
+            window.scrollTo(0, 0);
+        }
+
+        function resetHeaderStyling(pageId) {
+            const header = document.getElementById('main-header');
+            const logo   = document.getElementById('logo');
+            const lines  = document.querySelectorAll('.hamburger-line');
+
+            if (pageId === 'home') {
+                header.classList.add('mix-blend-difference');
+                header.classList.remove('bg-[#fbfaf7]/90', 'backdrop-blur-md', 'shadow-sm');
+                logo.classList.remove('text-neutral-900');
+                logo.classList.add('text-white');
+                lines.forEach(el => { el.classList.remove('bg-neutral-900'); el.classList.add('bg-white'); });
+            } else {
+                header.classList.remove('mix-blend-difference');
+                header.classList.add('bg-[#fbfaf7]/90', 'backdrop-blur-md', 'shadow-sm');
+                logo.classList.remove('text-white');
+                logo.classList.add('text-neutral-900');
+                lines.forEach(el => { el.classList.remove('bg-white'); el.classList.add('bg-neutral-900'); });
+            }
+        }
+
+        /* ══ PROJECT DETAIL ══ */
+        function openProject(idx) {
+            const p = projectsData[idx];
+            document.getElementById('detail-hero').src = p.hero;
+            document.getElementById('detail-hero').alt = p.title;
+            document.getElementById('detail-category').textContent = p.category;
+            document.getElementById('detail-title').textContent = p.title;
+            document.getElementById('detail-desc').textContent = p.desc;
+            document.getElementById('detail-year').textContent = p.year;
+            document.getElementById('detail-location').textContent = p.location;
+            document.getElementById('detail-services').textContent = p.services;
+
+            // Gallery
+            const gallery = document.getElementById('detail-gallery');
+            gallery.innerHTML = p.gallery.map(src =>
+                `<div class="overflow-hidden bg-neutral-100 aspect-[16/10]">
+                    <img src="${src}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" loading="lazy">
+                </div>`
+            ).join('');
+
+            // Related (pick 3 others)
+            const related = document.getElementById('detail-related');
+            const others = projectsData.filter((_, i) => i !== idx).slice(0, 3);
+            related.innerHTML = others.map((op, i) => {
+                const oi = projectsData.indexOf(op);
+                return `<div onclick="openProject(${oi})" class="group cursor-pointer">
+                    <div class="overflow-hidden bg-neutral-100 aspect-[4/3] mb-4">
+                        <img src="${op.hero}" alt="${op.title}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy">
+                    </div>
+                    <p class="featured-tag mb-1">${op.category}</p>
+                    <p class="font-serif text-lg font-light group-hover:italic transition-all">${op.title}</p>
+                </div>`;
+            }).join('');
+
+            showPage('project-detail');
+        }
+
+        /* ══ HOME FILTER ══ */
+        function filterProjects(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            document.querySelectorAll('#page-home .project-card').forEach(card => {
+                const show = cat === 'all' || card.dataset.category === cat;
+                card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                card.style.opacity = show ? '1' : '0';
+                card.style.transform = show ? 'scale(1)' : 'scale(0.97)';
+                card.style.pointerEvents = show ? '' : 'none';
+            });
+            setTimeout(() => {
+                document.querySelectorAll('#page-home .project-card').forEach(card => {
+                    const show = cat === 'all' || card.dataset.category === cat;
+                    card.style.display = show ? '' : 'none';
+                    if (show) { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }
+                });
+            }, 400);
+        }
+
+        /* ══ PROJECTS PAGE FILTER ══ */
+        function filterProjectsPage(cat, btn) {
+            document.querySelectorAll('.proj-filter-btn').forEach(b => {
+                b.classList.remove('font-medium', 'text-neutral-900', 'border-b', 'border-neutral-900');
+                b.classList.add('text-neutral-400');
+            });
+            btn.classList.add('font-medium', 'text-neutral-900', 'border-b', 'border-neutral-900');
+            btn.classList.remove('text-neutral-400');
+            document.querySelectorAll('.proj-page-card').forEach(card => {
+                const show = cat === 'all' || card.dataset.category === cat;
+                card.style.display = show ? '' : 'none';
+            });
+        }
+
+        /* ══ HERO SLIDESHOW ══ */
+        let currentSlide = 0;
+        const slides  = document.querySelectorAll('.slide');
+        const dots    = document.querySelectorAll('.slide-dot');
+        const counter = document.getElementById('slide-cur');
+        const nums    = ['01','02','03'];
+
+        function goSlide(idx) {
+            slides[currentSlide].classList.remove('active');
+            if (dots[currentSlide]) { dots[currentSlide].style.width = '12px'; dots[currentSlide].style.opacity = '0.4'; }
+            currentSlide = idx;
+            slides[currentSlide].classList.add('active');
+            if (dots[currentSlide]) { dots[currentSlide].style.width = '24px'; dots[currentSlide].style.opacity = '1'; }
+            if (counter) counter.textContent = nums[currentSlide];
+        }
+
+        setInterval(() => goSlide((currentSlide + 1) % slides.length), 5500);
+
+        /* ══ SERVICES INTERACTIVE ══ */
+        const servicesData = [
+            {
+                label: "Design",
+                img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
+                desc: "From first sketch to final construction document — our design process is exhaustive, iterative, and precision-led. Every decision serves the architecture."
+            },
+            {
+                label: "Construction",
+                img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
+                desc: "End-to-end build delivery under one roof. No third-party contractors between Kàmer and the site — total accountability, from foundation to final finish."
+            },
+            {
+                label: "Custom Furniture",
+                img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80",
+                desc: "Each piece designed and fabricated in-house — from bespoke dining tables to full millwork programs — realised with the same precision that defines every Kàmer project."
+            }
+        ];
+
+        function updateService(idx) {
+            const img   = document.getElementById('service-img');
+            const desc  = document.getElementById('service-desc');
+            const label = document.getElementById('service-label');
+            if (!img || !desc) return;
+            img.style.opacity = '0'; desc.style.opacity = '0'; if(label) label.style.opacity = '0';
+            setTimeout(() => {
+                img.src = servicesData[idx].img;
+                desc.textContent = servicesData[idx].desc;
+                if(label) label.textContent = servicesData[idx].label;
+                img.style.opacity = '1'; desc.style.opacity = '1'; if(label) label.style.opacity = '1';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
